@@ -22,10 +22,20 @@ jobs:
             goos: darwin
             goarch: amd64
             runs-on: macos-latest
+          - os: macos-arm64
+            ext: ''
+            goos: darwin
+            goarch: arm64
+            runs-on: macos-latest
           - os: linux
             ext: ''
             goos: linux
             goarch: amd64
+            runs-on: ubuntu-latest
+          - os: linux-arm64
+            ext: ''
+            goos: linux
+            goarch: arm64
             runs-on: ubuntu-latest
 
     steps:
@@ -38,24 +48,24 @@ jobs:
           go-version: '1.24'
 
       - name: Install Linux dependencies
-        if: matrix.os == 'linux' || matrix.os == 'windows'
+        if: matrix.os == 'linux' || matrix.os == 'linux-arm64' || matrix.os == 'windows'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgl1-mesa-dev xorg-dev libasound2-dev
 
       - name: Install Xvfb on Linux
-        if: matrix.os == 'linux' || matrix.os == 'windows'
+        if: matrix.os == 'linux' || matrix.os == 'linux-arm64' || matrix.os == 'windows'
         run: |
           sudo apt-get install -y xvfb
 
       - name: Install macOS dependencies
-        if: matrix.os == 'macos'
+        if: matrix.os == 'macos' || matrix.os == 'macos-arm64'
         run: |
           brew update
           brew install pkg-config glfw3 cmake
 
       - name: Build on Linux/Windows
-        if: matrix.os == 'linux' || matrix.os == 'windows'
+        if: matrix.os == 'linux' || matrix.os == 'linux-arm64' || matrix.os == 'windows'
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -64,7 +74,7 @@ jobs:
           xvfb-run --auto-servernum go build -v -o ai-flappy-bird${{ matrix.ext }}
 
       - name: Build on macOS
-        if: matrix.os == 'macos'
+        if: matrix.os == 'macos' || matrix.os == 'macos-arm64'
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -99,11 +109,15 @@ jobs:
         run: |
           cp artifacts/ai-flappy-bird-windows/ai-flappy-bird.exe release/ai-flappy-bird-windows-amd64.exe
           cp artifacts/ai-flappy-bird-macos/ai-flappy-bird release/ai-flappy-bird-macos-amd64
+          cp artifacts/ai-flappy-bird-macos-arm64/ai-flappy-bird release/ai-flappy-bird-macos-arm64
           cp artifacts/ai-flappy-bird-linux/ai-flappy-bird release/ai-flappy-bird-linux-amd64
+          cp artifacts/ai-flappy-bird-linux-arm64/ai-flappy-bird release/ai-flappy-bird-linux-arm64
           cp README.md LICENSE release/
           cd release && zip -r ai-flappy-bird-windows-amd64.zip ai-flappy-bird-windows-amd64.exe README.md LICENSE
           cd release && zip -r ai-flappy-bird-macos-amd64.zip ai-flappy-bird-macos-amd64 README.md LICENSE
+          cd release && zip -r ai-flappy-bird-macos-arm64.zip ai-flappy-bird-macos-arm64 README.md LICENSE
           cd release && zip -r ai-flappy-bird-linux-amd64.zip ai-flappy-bird-linux-amd64 README.md LICENSE
+          cd release && zip -r ai-flappy-bird-linux-arm64.zip ai-flappy-bird-linux-arm64 README.md LICENSE
 
       - name: Create Release
         id: create_release
@@ -112,7 +126,9 @@ jobs:
           files: |
             release/ai-flappy-bird-windows-amd64.zip
             release/ai-flappy-bird-macos-amd64.zip
+            release/ai-flappy-bird-macos-arm64.zip
             release/ai-flappy-bird-linux-amd64.zip
+            release/ai-flappy-bird-linux-arm64.zip
           draft: false
           prerelease: false
           generate_release_notes: true
