@@ -26,8 +26,8 @@ Flappy Bird is a side-scrolling game where the player controls a bird, attemptin
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/flappy-bird.git
-   cd flappy-bird
+   git clone https://github.com/berkitamas/ai-flappy-bird.git
+   cd ai-flappy-bird
    ```
 
 2. Install dependencies:
@@ -49,6 +49,16 @@ Or build and run the executable:
 go build
 ./flappy-bird
 ```
+
+## Releases
+
+The project uses GitHub Actions to automatically build and release the game for Windows, macOS, and Linux. When a new version is ready:
+
+1. Create a new tag with the version number (e.g., `v1.0.0`)
+2. Push the tag to GitHub
+3. The GitHub Actions workflow will automatically build the game for all platforms and create a release
+
+You can download the latest release from the [Releases page](https://github.com/berkitamas/ai-flappy-bird/releases).
 
 ## Game Controls
 
