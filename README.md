@@ -22,6 +22,23 @@ Flappy Bird is a side-scrolling game where the player controls a bird, attemptin
 - Go 1.16 or higher
 - Ebiten v2 library (with audio support)
 
+## Testing
+
+The project includes comprehensive unit tests with over 80% code coverage. To run the tests:
+
+```
+go test ./...
+```
+
+To run tests with coverage report:
+
+```
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out
+```
+
+The GitHub Actions workflow automatically runs tests and verifies that code coverage is at least 80%.
+
 ## Installation
 
 1. Clone the repository:
