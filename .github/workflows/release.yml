@@ -58,6 +58,13 @@ jobs:
         run: |
           sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
+      - name: Install ARM64 libraries for cross-compilation
+        if: matrix.os == 'linux-arm64'
+        run: |
+          sudo dpkg --add-architecture arm64
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev:arm64 libx11-dev:arm64 libxrandr-dev:arm64 libxxf86vm-dev:arm64 libxi-dev:arm64 libxcursor-dev:arm64
+
       - name: Install Xvfb on Linux
         if: matrix.os == 'linux' || matrix.os == 'linux-arm64' || matrix.os == 'windows'
         run: |
