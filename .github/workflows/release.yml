@@ -116,10 +116,10 @@ jobs:
           cp artifacts/ai-flappy-bird-macos-arm64/ai-flappy-bird release/ai-flappy-bird-macos-arm64
           cp artifacts/ai-flappy-bird-linux/ai-flappy-bird release/ai-flappy-bird-linux-amd64
           cp README.md LICENSE release/
-          cd release && zip -r ai-flappy-bird-windows-amd64.zip ai-flappy-bird-windows-amd64.exe README.md LICENSE
-          cd release && zip -r ai-flappy-bird-macos-amd64.zip ai-flappy-bird-macos-amd64 README.md LICENSE
-          cd release && zip -r ai-flappy-bird-macos-arm64.zip ai-flappy-bird-macos-arm64 README.md LICENSE
-          cd release && zip -r ai-flappy-bird-linux-amd64.zip ai-flappy-bird-linux-amd64 README.md LICENSE
+          cd release && zip -r ai-flappy-bird-windows-amd64.zip ai-flappy-bird-windows-amd64.exe README.md LICENSE && cd ..
+          cd release && zip -r ai-flappy-bird-macos-amd64.zip ai-flappy-bird-macos-amd64 README.md LICENSE && cd ..
+          cd release && zip -r ai-flappy-bird-macos-arm64.zip ai-flappy-bird-macos-arm64 README.md LICENSE && cd ..
+          cd release && zip -r ai-flappy-bird-linux-amd64.zip ai-flappy-bird-linux-amd64 README.md LICENSE && cd ..
 
       - name: Create Release
         id: create_release
