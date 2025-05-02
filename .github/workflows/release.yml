@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Build and Release
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
         include:
@@ -16,14 +16,17 @@ jobs:
             ext: .exe
             goos: windows
             goarch: amd64
+            runs-on: ubuntu-latest
           - os: macos
             ext: ''
             goos: darwin
             goarch: amd64
+            runs-on: macos-latest
           - os: linux
             ext: ''
             goos: linux
             goarch: amd64
+            runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -34,22 +37,40 @@ jobs:
         with:
           go-version: '1.24'
 
-      - name: Install dependencies
+      - name: Install Linux dependencies
+        if: matrix.os == 'linux' || matrix.os == 'windows'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgl1-mesa-dev xorg-dev libasound2-dev
 
-      - name: Install Xvfb
+      - name: Install Xvfb on Linux
+        if: matrix.os == 'linux' || matrix.os == 'windows'
         run: |
           sudo apt-get install -y xvfb
 
-      - name: Build
+      - name: Install macOS dependencies
+        if: matrix.os == 'macos'
+        run: |
+          brew update
+          brew install pkg-config
+
+      - name: Build on Linux/Windows
+        if: matrix.os == 'linux' || matrix.os == 'windows'
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
         run: |
           go mod tidy
           xvfb-run --auto-servernum go build -v -o ai-flappy-bird${{ matrix.ext }}
+
+      - name: Build on macOS
+        if: matrix.os == 'macos'
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          go mod tidy
+          go build -v -o ai-flappy-bird${{ matrix.ext }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
