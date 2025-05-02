@@ -110,6 +110,7 @@ jobs:
 
       - name: Prepare release files
         run: |
+          mkdir -p release
           cp artifacts/ai-flappy-bird-windows/ai-flappy-bird.exe release/ai-flappy-bird-windows-amd64.exe
           cp artifacts/ai-flappy-bird-macos/ai-flappy-bird release/ai-flappy-bird-macos-amd64
           cp artifacts/ai-flappy-bird-macos-arm64/ai-flappy-bird release/ai-flappy-bird-macos-arm64
