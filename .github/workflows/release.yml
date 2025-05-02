@@ -52,7 +52,7 @@ jobs:
         if: matrix.os == 'macos'
         run: |
           brew update
-          brew install pkg-config
+          brew install pkg-config glfw3 cmake
 
       - name: Build on Linux/Windows
         if: matrix.os == 'linux' || matrix.os == 'windows'
@@ -68,9 +68,10 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 1
         run: |
           go mod tidy
-          go build -v -o ai-flappy-bird${{ matrix.ext }}
+          go build -v -tags=darwin -o ai-flappy-bird${{ matrix.ext }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
