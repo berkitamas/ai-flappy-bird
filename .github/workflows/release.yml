@@ -64,8 +64,18 @@ jobs:
           brew update
           brew install pkg-config glfw3 cmake
 
-      - name: Build on Linux/Windows
-        if: matrix.os == 'linux' || matrix.os == 'linux-arm64' || matrix.os == 'windows'
+      - name: Build on Linux
+        if: matrix.os == 'linux' || matrix.os == 'linux-arm64'
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 1
+        run: |
+          go mod tidy
+          xvfb-run --auto-servernum go build -v -tags=linux -o ai-flappy-bird${{ matrix.ext }}
+
+      - name: Build on Windows
+        if: matrix.os == 'windows'
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
