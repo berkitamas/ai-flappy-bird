@@ -53,6 +53,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgl1-mesa-dev xorg-dev libasound2-dev
 
+      - name: Install ARM64 cross-compilation tools
+        if: matrix.os == 'linux-arm64'
+        run: |
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
+
       - name: Install Xvfb on Linux
         if: matrix.os == 'linux' || matrix.os == 'linux-arm64' || matrix.os == 'windows'
         run: |
@@ -64,12 +69,24 @@ jobs:
           brew update
           brew install pkg-config glfw3 cmake
 
-      - name: Build on Linux
-        if: matrix.os == 'linux' || matrix.os == 'linux-arm64'
+      - name: Build on Linux (amd64)
+        if: matrix.os == 'linux'
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
           CGO_ENABLED: 1
+        run: |
+          go mod tidy
+          xvfb-run --auto-servernum go build -v -tags=linux -o ai-flappy-bird${{ matrix.ext }}
+
+      - name: Build on Linux (arm64)
+        if: matrix.os == 'linux-arm64'
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 1
+          CC: aarch64-linux-gnu-gcc
+          CXX: aarch64-linux-gnu-g++
         run: |
           go mod tidy
           xvfb-run --auto-servernum go build -v -tags=linux -o ai-flappy-bird${{ matrix.ext }}
