@@ -24,9 +24,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgl1-mesa-dev xorg-dev libasound2-dev
 
+      - name: Install Xvfb
+        run: |
+          sudo apt-get install -y xvfb
+
       - name: Run tests with coverage
         run: |
-          go test -v -coverprofile=coverage.out ./...
+          xvfb-run --auto-servernum go test -v -coverprofile=coverage.out ./...
 
       - name: Check coverage
         run: |

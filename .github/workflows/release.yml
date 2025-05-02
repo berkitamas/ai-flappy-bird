@@ -39,13 +39,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgl1-mesa-dev xorg-dev libasound2-dev
 
+      - name: Install Xvfb
+        run: |
+          sudo apt-get install -y xvfb
+
       - name: Build
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
         run: |
           go mod tidy
-          go build -v -o ai-flappy-bird${{ matrix.ext }}
+          xvfb-run --auto-servernum go build -v -o ai-flappy-bird${{ matrix.ext }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
